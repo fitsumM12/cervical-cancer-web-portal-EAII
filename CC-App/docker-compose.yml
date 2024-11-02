@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  react-app:
+    build: ./CC-frontend
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - django-backend
+
+  django-backend:
+    build: ./DC-backend
+    ports:
+      - '8000:8000'
+    # volumes:
+    #   - ./DR-backend:/app
+    environment:
+      - DEBUG=1
+      - SECRET_KEY='django-insecure-+^g(k*sczn+22x!#rgdod5q3dcw1k*xf*^x_(5bg8o_*tn8f!k'
+    command: python manage.py runserver 0.0.0.0:8000
+
+volumes:
+  db-data:
