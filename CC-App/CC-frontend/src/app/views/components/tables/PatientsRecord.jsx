@@ -148,7 +148,6 @@ console.log("patient filtered", filteredpatient)
                       </ValidatorForm>
                     </TableCell>
                     <TableCell align="center">Mobile</TableCell>
-                    <TableCell align="center">Gender</TableCell>
                     <TableCell align="center">Registered</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
@@ -163,8 +162,6 @@ console.log("patient filtered", filteredpatient)
                         </TableCell>
                         <TableCell align="center">{patient.mobile}</TableCell>
                         <TableCell align="center">
-                          {patient.gender}
-                        </TableCell><TableCell align="center">
                           {patient.record_date}
                         </TableCell>
                         <TableCell align="right">

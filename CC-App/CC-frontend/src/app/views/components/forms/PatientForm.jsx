@@ -2,14 +2,34 @@ import React, { useEffect, useState } from "react";
 import {
   FormControlLabel,
   FormHelperText,
-  FormLabel, IconButton, Radio, RadioGroup, Tooltip, Button, FormControl, InputLabel, MenuItem, Select, Grid, styled, CircularProgress, Box, Stack, Typography
+  FormLabel,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Tooltip,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Grid,
+  styled,
+  CircularProgress,
+  Box,
+  Stack,
+  Typography,
 } from "@mui/material";
-import FlipIcon from '@mui/icons-material/Flip';
+import FlipIcon from "@mui/icons-material/Flip";
 import { AddCircleOutline } from "@mui/icons-material";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import { Span } from "app/components/Typography";
 import { useDropzone } from "react-dropzone";
-import { predictImage, submitFormData, submitImageAndPrediction, updatePatientInAPI } from "app/apis/patients_api";
+import {
+  predictImage,
+  submitFormData,
+  submitImageAndPrediction,
+  updatePatientInAPI,
+} from "app/apis/patients_api";
 import { SimpleCard } from "app/components";
 import useAuth from "app/hooks/useAuth";
 import { PredictionResult, AbnormalityDetection } from "./PredictionResult";
@@ -40,12 +60,12 @@ const dropzoneStyle = {
   marginBottom: "10px",
   height: "50px",
   backgroundColor: "#f0f8ff",
-}
+};
 
 const diagnosisLabels = {
   0: "Normal",
   1: "LSIL",
-  2: "HSIL"
+  2: "HSIL",
 };
 
 const getLargestIndex = (predictionArray) => {
@@ -56,7 +76,6 @@ const isPredictionValid = (predictionArray) => {
   return Array.isArray(predictionArray) && predictionArray.length > 0;
 };
 
-
 const PatientForm = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +85,7 @@ const PatientForm = () => {
   const [res, setRes] = useState({});
   const { user } = useAuth();
   const { state, dispatch } = useAppContext();
-  console.log("state", state)
+  console.log("state", state);
   const [predictions, setPredictions] = useState({
     patient_id: null,
     image_url: null,
@@ -79,7 +98,7 @@ const PatientForm = () => {
     first_name: "",
     last_name: "",
     birthdate: "1990-12-12",
-    gender: "",
+    gender: "female",
     job: "job",
     email: "custom@gmail.com",
     mobile: "0974000000",
@@ -97,7 +116,7 @@ const PatientForm = () => {
   useEffect(() => {
     if (state.new_screening) setShowImageSection(true);
     return () => {
-      if (state.new_screening) dispatch({ type: 'STOP_NEW_SCREENING' });
+      if (state.new_screening) dispatch({ type: "STOP_NEW_SCREENING" });
     };
   }, [state.new_screening, dispatch]);
 
@@ -109,7 +128,8 @@ const PatientForm = () => {
       if (imageFiles.length > 0) setImagePreview(imageFiles[0]);
     },
   });
-  const handleChange = (event) => setFormData({ ...formData, [event.target.name]: event.target.value });
+  const handleChange = (event) =>
+    setFormData({ ...formData, [event.target.name]: event.target.value });
 
   const handleDiagnose = async () => {
     if (!imagePreview) {
@@ -130,13 +150,13 @@ const PatientForm = () => {
       if (isPredictionValid(prediction?.predictions[0])) {
         const finalPredictions = {
           ...predictions,
-          image_prediction: diagnosisLabels[getLargestIndex(prediction?.predictions[0])],
+          image_prediction:
+            diagnosisLabels[getLargestIndex(prediction?.predictions[0])],
           image_url: prediction.image_url,
         };
         const response = await submitImageAndPrediction(finalPredictions);
         setRes(response);
-      }
-      else {
+      } else {
         const updatedPredictions = {
           ...predictions,
           image_prediction: null,
@@ -161,7 +181,7 @@ const PatientForm = () => {
 
     try {
       const response = await submitFormData(formData);
-      setPredictions((prev) => ({ ...prev, patient_id: response.id }))
+      setPredictions((prev) => ({ ...prev, patient_id: response.id }));
       setShowImageSection(true);
     } catch (error) {
       console.error("Error saving patient data:", error);
@@ -222,7 +242,6 @@ const PatientForm = () => {
                   />
                 </Grid>
                 <Grid item lg={6} md={6} sm={12} xs={12} sx={{ mt: 2 }}>
-
                   <TextField
                     type="date"
                     name="birthdate"
@@ -233,40 +252,6 @@ const PatientForm = () => {
                     validators={["required"]}
                     errorMessages={["this field is required"]}
                   />
-
-                  <FormLabel component="legend">Gender</FormLabel>
-                  <RadioGroup
-                    row
-                    name="gender"
-                    label="Gender"
-                    sx={{ mb: 2 }}
-                    value={formData.gender}
-                    onChange={handleChange}
-                  >
-                    <FormControlLabel
-                      value="Male"
-                      label="Male"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
-                    <FormControlLabel
-                      value="Female"
-                      label="Female"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
-                    <FormControlLabel
-                      value="Others"
-                      label="Others"
-                      labelPlacement="end"
-                      control={<Radio color="secondary" />}
-                    />
-                  </RadioGroup>
-                  {genderError && (
-                    <FormHelperText error sx={{ mb: 2 }}>
-                      Please select a gender
-                    </FormHelperText>
-                  )}
                   <TextField
                     type="text"
                     name="region"
@@ -296,20 +281,19 @@ const PatientForm = () => {
 
               <Button
                 sx={{
-                  bgcolor: '#181b62',
+                  bgcolor: "#181b62",
                   borderRadius: 2,
-                  '&:hover': {
-                    bgcolor: '#fa931d',
+                  "&:hover": {
+                    bgcolor: "#fa931d",
                   },
                 }}
                 variant="contained"
                 type="submit"
               >
-                <Span sx={{ pl: 1, textTransform: 'capitalize' }}>
+                <Span sx={{ pl: 1, textTransform: "capitalize" }}>
                   Save and Continue
                 </Span>
               </Button>
-
             </ValidatorForm>
           ) : (
             <>
@@ -328,10 +312,10 @@ const PatientForm = () => {
                     onClick={handleDiagnose}
                     disabled={isLoading}
                     sx={{
-                      bgcolor: '#181b62',
+                      bgcolor: "#181b62",
                       borderRadius: 2,
-                      '&:hover': {
-                        bgcolor: '#fa931d',
+                      "&:hover": {
+                        bgcolor: "#fa931d",
                       },
                     }}
                   >
@@ -343,76 +327,125 @@ const PatientForm = () => {
               </Grid>
               <Grid container spacing={2} sx={{ marginTop: 2 }}>
                 <Grid item xs={12} md={7}>
-                  <Box component="section" sx={{ p: 2, border: '1px dashed grey', borderRadius: '5px' }}>
+                  <Box
+                    component="section"
+                    sx={{
+                      p: 2,
+                      border: "1px dashed grey",
+                      borderRadius: "5px",
+                    }}
+                  >
                     {imagePreview && (
                       <>
-
-                        <div style={{ display: "flex", justifyContent: "center" }}>
-                          <h4 style={{ maxWidth: "80%", maxHeight: "80%", textAlign: 'center' }}>Image Preview</h4>
+                        <div
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <h4
+                            style={{
+                              maxWidth: "80%",
+                              maxHeight: "80%",
+                              textAlign: "center",
+                            }}
+                          >
+                            Image Preview
+                          </h4>
                         </div>
                         <Zoom>
-                          <div style={{ display: "flex", justifyContent: "center" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                          >
                             <img
                               src={URL.createObjectURL(imagePreview)}
                               alt="Image"
-                              style={{ width: "80%", height: "60%", cursor: "pointer" }}
+                              style={{
+                                width: "80%",
+                                height: "60%",
+                                cursor: "pointer",
+                              }}
                             />
                           </div>
                         </Zoom>
-
                       </>
                     )}
                   </Box>
                 </Grid>
 
                 <Grid item xs={12} md={5}>
-
-                  <Box component="section" sx={{ p: 2, border: '1px dashed darkblue', borderRadius: '5px' }}>
-                    <Typography variant="h6" component="div" sx={{ marginBottom: 1, textAlign: 'center' }}>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <FlipIcon sx={{ color: '#fa931d' }} />               &nbsp;&nbsp;&nbsp;   Diagnosis Result &nbsp;&nbsp;&nbsp;
-                        {(predictions.image_prediction) && (
+                  <Box
+                    component="section"
+                    sx={{
+                      p: 2,
+                      border: "1px dashed darkblue",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
+                      component="div"
+                      sx={{ marginBottom: 1, textAlign: "center" }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <FlipIcon sx={{ color: "#fa931d" }} />{" "}
+                        &nbsp;&nbsp;&nbsp; Diagnosis Result &nbsp;&nbsp;&nbsp;
+                        {predictions.image_prediction && (
                           <>
                             <Tooltip title="Add Feedback">
                               <IconButton
                                 onClick={handleOpenDialog}
-                                sx={{ align: "right", "&:hover": { bgcolor: "grey.200" } }}
+                                sx={{
+                                  align: "right",
+                                  "&:hover": { bgcolor: "grey.200" },
+                                }}
                               >
                                 <AddCircleOutline sx={{ color: "#E53935" }} />
                               </IconButton>
                             </Tooltip>
-                            <PhysicianDecisionDialog open={dialogOpen} onClose={handleCloseDialog} Result={res} />
+                            <PhysicianDecisionDialog
+                              open={dialogOpen}
+                              onClose={handleCloseDialog}
+                              Result={res}
+                            />
                           </>
                         )}
                       </div>
-
                     </Typography>
                     {isLoading && (
                       <div style={{ textAlign: "center" }}>
                         <CircularProgress />
                       </div>
                     )}
-                    {(predictions.image_prediction) && (
+                    {predictions.image_prediction && (
                       <>
                         <AbnormalityDetection
-                          data={predictions.image_prediction ? predictions.image_prediction[0] : [0]}
+                          data={
+                            predictions.image_prediction
+                              ? predictions.image_prediction[0]
+                              : [0]
+                          }
                         />
                       </>
                     )}
                     {predictions.image_prediction && (
-                      <PredictionResult data={predictions.image_prediction ? predictions.image_prediction[0] : [0]} />
+                      <PredictionResult
+                        data={
+                          predictions.image_prediction
+                            ? predictions.image_prediction[0]
+                            : [0]
+                        }
+                      />
                     )}
                   </Box>
                 </Grid>
               </Grid>
-
             </>
           )}
         </SimpleCard>
       </Stack>
-    </Container >
+    </Container>
   );
-}
+};
 
 export default PatientForm;
-
